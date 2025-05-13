@@ -12,8 +12,19 @@
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div>
+        <div class="mt-4">
+            <x-input-label for="address" :value="__('Address')" />
+            <x-text-input id="address" class="block mt-1 w-full" type="text" name="address" :value="old('address')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('address')" class="mt-2" />
+        </div>
+
+        <div class="mt-4">
+            <x-input-label for="email" :value="__('No Telp')" />
+            <x-text-input id="email" class="block mt-1 w-full" type="text" name="phone_number" :value="old('phone_number')" required autocomplete="username" />
+            <x-input-error :messages="$errors->get('phone_number')" class="mt-2" />
         </div>
 
         <!-- Password -->
@@ -40,7 +51,7 @@
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
+            <a class="underline text-sm text-orange-600 hover:text-orange-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
 

@@ -6,6 +6,7 @@ use App\Filament\Resources\CategoriesResource\Pages;
 use App\Filament\Resources\CategoriesResource\RelationManagers;
 use App\Models\Categories;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,6 +26,12 @@ class CategoriesResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
+                
+                FileUpload::make('image_url')
+                    ->disk('local')
+                    ->image()
+                    ->imageEditor()
+                    ->required(),
             ]);
     }
 
@@ -61,6 +68,11 @@ class CategoriesResource extends Resource
         return [
             //
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->role == 'merchant';
     }
 
     public static function getPages(): array

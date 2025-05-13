@@ -6,8 +6,14 @@ use App\Filament\Resources\ProductsResource\Pages;
 use App\Filament\Resources\ProductsResource\RelationManagers;
 use App\Models\Categories;
 use App\Models\Products;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -25,39 +31,60 @@ class ProductsResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->label("JANGAN DIUBAH")
-                    ->default(auth()->user()->id)
-                    ->required()
-                    ->numeric(),
-                FileUpload::make('image_url')
-                    ->disk('local')
-                    ->image()
-                    ->imageEditor()
-                    ->required(),
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('description')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('price')
-                    ->required()
-                    ->numeric()
-                    ->prefix('Rp'),
-                Forms\Components\TextInput::make('stock')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\Select::make('category_id')
-                    ->options(Categories::all()->pluck('name', 'id'))
-                    ->required(),
+                Section::make('')
+                    ->schema([
+                        Hidden::make('user_id')
+                            ->default(auth()->user()->id),
+                        FileUpload::make('image_url')
+                            ->disk('local')
+                            ->image()
+                            ->imageEditor()
+                            ->required(),
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\RichEditor::make('description')
+                            ->required()
+                            ->columnSpanFull(),
+                        Forms\Components\TextInput::make('price')
+                            ->required()
+                            ->numeric()
+                            ->prefix('Rp'),
+                        Forms\Components\TextInput::make('discounted_price')
+                            ->required()
+                            ->numeric()
+                            ->prefix('Rp'),
+                        Forms\Components\TextInput::make('stock')
+                            ->required()
+                            ->numeric(),
+                        Forms\Components\Select::make('category_id')
+                            ->options(Categories::all()->pluck('name', 'id'))
+                            ->required(),
+                    ]),
+                    Section::make('review')
+                    ->schema([
+                        Repeater::make('reviews')
+                            ->relationship()
+                            ->columnSpanFull()
+                            ->schema([
+                                Select::make('user_id')
+                                    ->label("Name")
+                                    ->columnSpan([
+                                    ])
+                                    ->options(User::all()->pluck('name', 'id')),
+                                TextInput::make('comment')
+                                    ->columnSpan([
+                                    ])
+                                    ,
+                            ])
+                    ])
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(function (Builder $query){
+            ->modifyQueryUsing(function (Builder $query) {
                 return $query->where('user_id', auth()->user()->id);
             })
             ->columns([
@@ -99,6 +126,12 @@ class ProductsResource extends Resource
             //
         ];
     }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()->role == 'merchant';
+    }
+
 
     public static function getPages(): array
     {

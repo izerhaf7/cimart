@@ -1,0 +1,13 @@
+Fonts used in this design:
+
+Font: Montserrat
+Author: Julieta Ulanovsky,Sol Matas,Juan Pablo del Peral,Jacques Le Bailly
+Url: https://fonts.google.com/specimen/Montserrat
+
+Font: Yellowtail
+Author: Astigmatic
+Url: https://fonts.google.com/specimen/Yellowtail
+
+Font: Paytone One
+Author: Vernon Adams
+Url: https://fonts.google.com/specimen/Paytone+One

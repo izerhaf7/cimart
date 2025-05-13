@@ -9,4 +9,5 @@ class Categories extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
 }

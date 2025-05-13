@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\ShoppingCart;
+use Illuminate\Support\Facades\View;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +22,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        
+        View::composer('*', function ($view) {
+            if (auth()->check()) {
+                // Fetch the count of cart items for the authenticated user
+                $cartItemCount = ShoppingCart::where('user_id', auth()->id())->count();
+                $view->with('cartItemCount', $cartItemCount);
+            } else {
+                // In case the user is not authenticated, set it to 0 or null
+                $view->with('cartItemCount', 0);
+            }
+        });
     }
 }
