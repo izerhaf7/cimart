@@ -4,7 +4,8 @@ namespace App\Providers;
 
 use App\Models\ShoppingCart;
 use Illuminate\Support\Facades\View;
-
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -22,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        
         View::composer('*', function ($view) {
             if (auth()->check()) {
                 // Fetch the count of cart items for the authenticated user
@@ -33,5 +33,10 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('cartItemCount', 0);
             }
         });
+
+        // Automatically create the storage symbolic link if not exists (only in local env)
+        if (!File::exists(public_path('storage'))) {
+            Artisan::call('storage:link');
+        }
     }
 }
